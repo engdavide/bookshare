@@ -1,0 +1,23 @@
+{
+  "name": "bookshare",
+  "version": "1.0.0",
+  "description": "Personal library groups for sharing books between friends.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/engdavide/bookshare.git"
+  },
+  "author": "David Eng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/engdavide/bookshare/issues"
+  },
+  "homepage": "https://github.com/engdavide/bookshare#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4"
+  }
+}
