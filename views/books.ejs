@@ -1,4 +1,9 @@
+<% include partials/header %>
+
+
 <h2>this is the book list page</h2>
+
+<a href="/books/new">Add a new book!</a></a>
 
 <% books.forEach(function(book){ %>
     <div>
@@ -8,3 +13,6 @@
 <% }); %>
 
 <a href="/">go home</a>
+
+
+<% include partials/footer %>
