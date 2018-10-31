@@ -45,24 +45,28 @@ var Book = mongoose.model("Book", bookSchema);
 //     }
 // )
 
+//HOME
 app.get("/", function(req, res){
     res.render("landing");
 });
 
+//Books INDEX
 app.get("/books", function(req,res){
     Book.find({}, function(err, allBooks){
         if(err){
             console.log(err);
         } else {
-            res.render("books", {books:allBooks});
+            res.render("index", {books:allBooks});
         }
     });
 });
 
+//Books NEW
 app.get("/books/new", function(req,res){
     res.render("new.ejs")
 })
 
+//Books CREATE
 app.post("/books", function(req, res){
     var name = req.body.name;
     var description = req.body.description;
@@ -72,11 +76,24 @@ app.post("/books", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.redirect("books")
+            res.redirect("index")
         }
     })
     
 });
+
+//BooksSHOW
+app.get("/books/:id", function(req,res){
+    Book.findById(req.params.id, function(err, foundBook){
+        if(err){
+            console.log(err);
+        } else {
+            res.render("show", {book: foundBook});
+        }
+    });
+});
+
+
 
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("bookshare is up!!");
