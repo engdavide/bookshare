@@ -1,18 +1,40 @@
 <% include partials/header %>
 
 
-<h2>this is the book list page</h2>
 
-<a href="/books/new">Add a new book!</a></a>
 
-<% books.forEach(function(book){ %>
-    <div>
-        <h4> <%= book.name %>   </h4>
+
+
+
+<div class="container">
+    
+    <header class="jumbotron">
+        <h1>Welcome to the book network!</h1>
+        <p>Borrow a book and share a book with your friends and friends of friends</p>
+        <a class="btn btn-primary btn-large" href="/books/new">Add a new book</a>
+    </header>
+    
+    <div class="container">
+        <div class="row" style="display: flex; flex-wrap: wrap;">
+    
+            <% books.forEach(function(book){ %>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                            <div class="thumbnail">
+                                <img src="<%= book.img %>" class="img-thumbnail">
+                            </div>
+                            <div class="caption">
+                                <%= book.name %>
+                            </div>
+                        </div>
+            <% }); %>
+                
+        </div>
     </div>
 
-<% }); %>
+    
+    <a href="/">go home</a>
 
-<a href="/">go home</a>
 
+</div> <!-- end container div-->
 
 <% include partials/footer %>
