@@ -1,49 +1,20 @@
-var express     = require("express"),
-    mongoose    = require("mongoose"),
-    app         = express(),
-    bodyParser  = require("body-parser");
+const   express     = require("express"),
+        mongoose    = require("mongoose"),
+        bodyParser  = require("body-parser");
 
-    var books = [
-        {name: "A Nuclear Family Vacation", description: "words about book1", img: "https://images-na.ssl-images-amazon.com/images/I/51kgqzZFzYL._SX330_BO1,204,203,200_.jpg"},
-        {name: "Python Crash Course", description: "words about book 2", img: "https://images-na.ssl-images-amazon.com/images/I/51A4cWQgMtL._SX376_BO1,204,203,200_.jpg"},
-        {name: "Culturally Proficient Inquiry", description: "words about book3", img: "https://images-na.ssl-images-amazon.com/images/I/511e5nl6G-L._SX351_BO1,204,203,200_.jpg"},
-        {name: "A Nuclear Family Vacation", description: "words about book1", img: "https://images-na.ssl-images-amazon.com/images/I/51kgqzZFzYL._SX330_BO1,204,203,200_.jpg"},
-        {name: "Python Crash Course", description: "words about book 2", img: "https://images-na.ssl-images-amazon.com/images/I/51A4cWQgMtL._SX376_BO1,204,203,200_.jpg"},
-        {name: "Culturally Proficient Inquiry", description: "words about book3", img: "https://images-na.ssl-images-amazon.com/images/I/511e5nl6G-L._SX351_BO1,204,203,200_.jpg"},
-        {name: "A Nuclear Family Vacation", description: "words about book1", img: "https://images-na.ssl-images-amazon.com/images/I/51kgqzZFzYL._SX330_BO1,204,203,200_.jpg"},
-        {name: "Python Crash Course", description: "words about book 2", img: "https://images-na.ssl-images-amazon.com/images/I/51A4cWQgMtL._SX376_BO1,204,203,200_.jpg"},
-        {name: "Culturally Proficient Inquiry", description: "words about book3", img: "https://images-na.ssl-images-amazon.com/images/I/511e5nl6G-L._SX351_BO1,204,203,200_.jpg"},
-    ];
+const   Book        = require("./models/book"),
+        Comment     = require("./models/comment"),
+        seedDB      = require("./seeds");
 
 
 
-mongoose.connect("mongodb://localhost/bookshare");
+const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-//schemas TODO: refactor later
-var bookSchema =  new mongoose.Schema({
-    name: String,
-    description: String,
-    img: String
-});
+mongoose.connect("mongodb://localhost/bookshare");
 
-var Book = mongoose.model("Book", bookSchema);
-
-// Book.create(
-//     {
-//         name: "A Nuclear Family Vacation", 
-//         description: "words about book1", 
-//         img: "https://images-na.ssl-images-amazon.com/images/I/51kgqzZFzYL._SX330_BO1,204,203,200_.jpg" 
-//     }, function(err, book){
-//         if(err){
-//             console.log(err);
-//         } else {
-//             console.log("made a thing: ");
-//             console.log(book);
-//         }
-//     }
-// )
+seedDB();
 
 //HOME
 app.get("/", function(req, res){
@@ -56,14 +27,14 @@ app.get("/books", function(req,res){
         if(err){
             console.log(err);
         } else {
-            res.render("index", {books:allBooks});
+            res.render("books/index", {books:allBooks});
         }
     });
 });
 
 //Books NEW
 app.get("/books/new", function(req,res){
-    res.render("new.ejs")
+    res.render("books/new.ejs")
 })
 
 //Books CREATE
@@ -76,7 +47,7 @@ app.post("/books", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.redirect("index")
+            res.redirect("/books")
         }
     })
     
@@ -84,15 +55,46 @@ app.post("/books", function(req, res){
 
 //BooksSHOW
 app.get("/books/:id", function(req,res){
-    Book.findById(req.params.id, function(err, foundBook){
+    Book.findById(req.params.id).populate("comments").exec(function(err, foundBook){
         if(err){
             console.log(err);
         } else {
-            res.render("show", {book: foundBook});
+            res.render("books/show", {book: foundBook});
+            console.log(foundBook);
         }
     });
 });
 
+//Books Comments NEW
+app.get("/books/:id/comments/new", function(req,res){
+    Book.findById(req.params.id, function(err, foundBook){
+        if(err){
+            console.log(err);
+        } else {
+            res.render("comments/new", {book: foundBook});
+        }
+    });
+});
+
+//Books comments CREATE
+app.post("/books/:id/comments", function(req, res){
+    Book.findById(req.params.id, function(err, foundBook){
+        if(err){
+            console.log(err);
+            res.redirect("/books");
+        } else {
+            Comment.create(req.body.comment, function(err, newComment){
+                if(err){
+                    console.log(err);
+                } else {
+                    foundBook.comments.push(newComment);
+                    foundBook.save();
+                    res.redirect("/books/" + foundBook._id);
+                }
+            });
+        }
+    });
+});
 
 
 app.listen(process.env.PORT, process.env.IP, function(){

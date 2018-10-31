@@ -1,0 +1,19 @@
+<% include ../partials/header %>
+
+<p><%= book.name %></p>
+
+<img src="<%= book.img %>"></img>
+
+<p><%= book.description %></p>
+
+<a class="btn btn-success" href="/books/<%= book.id %>/comments/new">Add a new comment</a>
+<% book.comments.forEach(function(comment){ %>
+    
+    
+    <p>
+            <strong><%= comment.author %></strong>--<%= comment.text %>
+    </p>
+
+<% }) %>
+
+<% include ../partials/footer %>
