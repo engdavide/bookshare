@@ -29,6 +29,9 @@ router.post("/", isLoggedIn, function(req, res){
                 if(err){
                     console.log(err);
                 } else {
+                    newComment.author.id = req.user._id;
+                    newComment.author.username= req.user.username;
+                    newComment.save();
                     foundBook.comments.push(newComment);
                     foundBook.save();
                     res.redirect("/books/" + foundBook._id);
@@ -38,11 +41,7 @@ router.post("/", isLoggedIn, function(req, res){
     });
 });
 
-
-
-
-
-
+//middleware
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();

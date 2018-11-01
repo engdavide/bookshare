@@ -27,18 +27,21 @@ router.post("/", isLoggedIn, function(req, res){
     var name = req.body.name;
     var description = req.body.description;
     var img = req.body.img;
-    var newBook = {name: name, description: description, img: img};
-    Book.create(newBook, function(err, newBook){
+    // var newBook = {name: name, description: description, img: img};
+    Book.create(req.body.book, function(err, newBook){
         if(err){
             console.log(err);
         } else {
+            newBook.owner.id = req.user._id;
+            newBook.owner.username = req.user.username;
+            newBook.save();
             res.redirect("/books")
         }
     })
     
 });
 
-//BooksSHOW
+//Books SHOW
 router.get("/:id", function(req,res){
     Book.findById(req.params.id).populate("comments").exec(function(err, foundBook){
         if(err){
@@ -50,7 +53,7 @@ router.get("/:id", function(req,res){
     });
 });
 
-
+//middleware
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();

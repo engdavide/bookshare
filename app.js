@@ -20,7 +20,7 @@ app.use(express.static(__dirname + "/public"));
 
 mongoose.connect("mongodb://localhost/bookshare");
 
-seedDB();
+//seedDB(); //Seed the database
 
 // PASSPORT config
 app.use(require("express-session")({
@@ -49,11 +49,7 @@ app.use("/books", bookRoutes);
 app.use("/books/:id/comments", commentRoutes);
 
 
-
-
-
-
-
+//middleware...
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();

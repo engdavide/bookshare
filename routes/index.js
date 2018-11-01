@@ -27,12 +27,12 @@ router.post("/register", function(req,res){
     });
 });
 
-//Login form
+//Login NEW
 router.get("/login", function(req,res){
     res.render("login");
 });
 
-//Login POST
+//Login CREATE
 router.post("/login", passport.authenticate("local",
     {
         successRedirect: "/books",
@@ -54,7 +54,7 @@ router.get("/", function(req, res){
 
 
 
-
+//middleware
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();
