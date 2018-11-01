@@ -1,100 +1,65 @@
-const   express     = require("express"),
-        mongoose    = require("mongoose"),
-        bodyParser  = require("body-parser");
+const   express         = require("express"),
+        mongoose        = require("mongoose"),
+        passport        = require("passport"),
+        LocalStrategy   = require("passport-local"),
+        bodyParser      = require("body-parser");
 
 const   Book        = require("./models/book"),
         Comment     = require("./models/comment"),
-        seedDB      = require("./seeds");
-
-
+        seedDB      = require("./seeds"),
+        User        = require("./models/user");
+        
+const   commentRoutes   = require("./routes/comment"),
+        bookRoutes      = require("./routes/book"),
+        indexRoutes     = require("./routes/index");
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
 
 mongoose.connect("mongodb://localhost/bookshare");
 
 seedDB();
 
-//HOME
-app.get("/", function(req, res){
-    res.render("landing");
-});
+// PASSPORT config
+app.use(require("express-session")({
+    secret: "secret",
+    resave: false,
+    saveUnitialied: false
+}))
 
-//Books INDEX
-app.get("/books", function(req,res){
-    Book.find({}, function(err, allBooks){
-        if(err){
-            console.log(err);
-        } else {
-            res.render("books/index", {books:allBooks});
-        }
-    });
-});
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-//Books NEW
-app.get("/books/new", function(req,res){
-    res.render("books/new.ejs")
+
+//pass user on all routes
+app.use(function(req, res, next){
+    res.locals.currentUser = req.user;
+    next();
 })
 
-//Books CREATE
-app.post("/books", function(req, res){
-    var name = req.body.name;
-    var description = req.body.description;
-    var img = req.body.img;
-    var newBook = {name: name, description: description, img: img};
-    Book.create(newBook, function(err, newBook){
-        if(err){
-            console.log(err);
-        } else {
-            res.redirect("/books")
-        }
-    })
-    
-});
 
-//BooksSHOW
-app.get("/books/:id", function(req,res){
-    Book.findById(req.params.id).populate("comments").exec(function(err, foundBook){
-        if(err){
-            console.log(err);
-        } else {
-            res.render("books/show", {book: foundBook});
-            console.log(foundBook);
-        }
-    });
-});
+//ROUTES
+app.use(indexRoutes);
+app.use(bookRoutes);
+app.use(commentRoutes);
 
-//Books Comments NEW
-app.get("/books/:id/comments/new", function(req,res){
-    Book.findById(req.params.id, function(err, foundBook){
-        if(err){
-            console.log(err);
-        } else {
-            res.render("comments/new", {book: foundBook});
-        }
-    });
-});
 
-//Books comments CREATE
-app.post("/books/:id/comments", function(req, res){
-    Book.findById(req.params.id, function(err, foundBook){
-        if(err){
-            console.log(err);
-            res.redirect("/books");
-        } else {
-            Comment.create(req.body.comment, function(err, newComment){
-                if(err){
-                    console.log(err);
-                } else {
-                    foundBook.comments.push(newComment);
-                    foundBook.save();
-                    res.redirect("/books/" + foundBook._id);
-                }
-            });
-        }
-    });
-});
+
+
+
+
+
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
 
 
 app.listen(process.env.PORT, process.env.IP, function(){

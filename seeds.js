@@ -29,7 +29,7 @@ function genBooks(){
 
         {
             name: "A Nuclear Family Vacation", 
-            description: "words about book1", 
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin a cursus tellus. Sed id molestie arcu. Nam finibus, quam ut euismod finibus, ante arcu egestas ipsum, non faucibus ante purus ut sapien. Ut sed consequat eros, a posuere massa. Phasellus vel erat sed est rhoncus eleifend. Donec a mauris feugiat, hendrerit turpis eget, mattis lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pharetra semper leo, ac tincidunt tellus volutpat vel. Vestibulum mollis commodo nisl eu interdum. Pellentesque eget posuere felis, ac porta ante. Aenean feugiat sem vitae nulla sodales tempus. Maecenas commodo tortor vitae ligula hendrerit, eu pretium augue tristique. Nam eget volutpat ante, vitae porta nibh. Nulla tristique eros quis metus accumsan bibendum. Ut at lectus nec nunc pellentesque feugiat lacinia vitae mi.", 
             img: "https://images-na.ssl-images-amazon.com/images/I/51kgqzZFzYL._SX330_BO1,204,203,200_.jpg"
             
         },
@@ -57,7 +57,7 @@ function genBooks(){
                     
                         Comment.create(
                             {
-                                text: "test comment",
+                                text: "Mauris cursus, urna ac consectetur facilisis, purus dolor posuere erat, vitae auctor libero quam et nisi. Nulla molestie libero et magna finibus, vitae molestie odio mollis. Sed pulvinar augue felis, vel scelerisque velit vehicula accumsan. Suspendisse auctor lectus eget consequat consequat. Pellentesque ut viverra dui, eget semper lorem. Donec eget nisi dui. Vivamus ornare placerat semper.",
                                 author: "me"
                             }, function(err, comment){
                                 if(err){
