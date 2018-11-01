@@ -44,9 +44,9 @@ app.use(function(req, res, next){
 
 
 //ROUTES
-app.use(indexRoutes);
-app.use(bookRoutes);
-app.use(commentRoutes);
+app.use("/", indexRoutes);
+app.use("/books", bookRoutes);
+app.use("/books/:id/comments", commentRoutes);
 
 
 

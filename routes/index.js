@@ -4,6 +4,8 @@ const   express     = require("express"),
         
 const   User    = require("../models/user");
 
+//ROUTE DECORATION :app.use("/", indexRoutes);
+
 
 //AUTH
 //USER new

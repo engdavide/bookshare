@@ -3,8 +3,11 @@ const   express     = require("express"),
         
 const   Book        = require("../models/book");
 
+//ROUTE DECORATION: app.use("/books", bookRoutes);
+
+
 //Books INDEX
-router.get("/books", function(req,res){
+router.get("/", function(req,res){
     Book.find({}, function(err, allBooks){
         if(err){
             console.log(err);
@@ -15,12 +18,12 @@ router.get("/books", function(req,res){
 });
 
 //Books NEW
-router.get("/books/new", isLoggedIn, function(req,res){
+router.get("/new", isLoggedIn, function(req,res){
     res.render("books/new.ejs")
 })
 
 //Books CREATE
-router.post("/books", isLoggedIn, function(req, res){
+router.post("/", isLoggedIn, function(req, res){
     var name = req.body.name;
     var description = req.body.description;
     var img = req.body.img;
@@ -36,7 +39,7 @@ router.post("/books", isLoggedIn, function(req, res){
 });
 
 //BooksSHOW
-router.get("/books/:id", function(req,res){
+router.get("/:id", function(req,res){
     Book.findById(req.params.id).populate("comments").exec(function(err, foundBook){
         if(err){
             console.log(err);

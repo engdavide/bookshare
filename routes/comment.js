@@ -1,11 +1,14 @@
 const   express     = require("express"),
-        router      = express.Router();
+        router      = express.Router({mergeParams: true});
+        // need merge params to pass :id from route decoration
         
 const   Book    = require("../models/book"),
         Comment = require("../models/comment");
+        
+//ROUTE DECORATION : app.use("/books/:id/comments", commentRoutes);
 
 //Books Comments NEW
-router.get("/books/:id/comments/new", isLoggedIn, function(req,res){
+router.get("/new", isLoggedIn, function(req,res){
     Book.findById(req.params.id, function(err, foundBook){
         if(err){
             console.log(err);
@@ -16,7 +19,7 @@ router.get("/books/:id/comments/new", isLoggedIn, function(req,res){
 });
 
 //Books comments CREATE
-router.post("/books/:id/comments", isLoggedIn, function(req, res){
+router.post("/", isLoggedIn, function(req, res){
     Book.findById(req.params.id, function(err, foundBook){
         if(err){
             console.log(err);
