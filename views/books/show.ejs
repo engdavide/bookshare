@@ -18,6 +18,11 @@
                     <h6 class="float-right">Checked out to SOMEONE</h6>
                     <h4> <a> <%= book.name %> </a> </h4>
                     <h6>Owner: <%= book.owner.username %></h6>
+                    <h6>Recent Borrow History: <%= book.owner.location %></h6>
+                    <a class="btn btn-warning btn-xs" href="/books/<%= book._id %>/edit">Edit</a>
+                    <form class="float-right" action="/books/<%= book._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger btn-xs">Delete</button>
+                    </form>
                     <p><%= book.description %></p>
                 </div>
             </div>

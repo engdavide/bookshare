@@ -19,15 +19,11 @@ router.get("/", function(req,res){
 
 //Books NEW
 router.get("/new", isLoggedIn, function(req,res){
-    res.render("books/new.ejs")
-})
+    res.render("books/new.ejs");
+});
 
 //Books CREATE
 router.post("/", isLoggedIn, function(req, res){
-    var name = req.body.name;
-    var description = req.body.description;
-    var img = req.body.img;
-    // var newBook = {name: name, description: description, img: img};
     Book.create(req.body.book, function(err, newBook){
         if(err){
             console.log(err);
@@ -35,10 +31,9 @@ router.post("/", isLoggedIn, function(req, res){
             newBook.owner.id = req.user._id;
             newBook.owner.username = req.user.username;
             newBook.save();
-            res.redirect("/books")
+            res.redirect("/books");
         }
-    })
-    
+    });
 });
 
 //Books SHOW
@@ -49,6 +44,44 @@ router.get("/:id", function(req,res){
         } else {
             res.render("books/show", {book: foundBook});
             // console.log(foundBook);
+        }
+    });
+});
+
+//Books EDIT
+router.get("/:id/edit", function(req, res) {
+    Book.findById(req.params.id, function(err, foundBook){
+        if(err){
+            console.log(err);
+            res.redirect("/books");
+        } else {
+            res.render("books/edit", {book: foundBook});
+        }
+    });
+    
+});
+
+//Books UPDATE
+router.put("/:id", function(req, res){
+    Book.findByIdAndUpdate(req.params.id, req.body.book, function(err, updatedBook){
+        if(err){
+            console.log(err);
+            res.redirect("/books/" + req.params.id);
+        } else {
+            res.redirect("/books/" + req.params.id);
+            
+        }
+    });
+});
+
+//Books DESTROY
+router.delete("/:id", function(req, res){
+    Book.findByIdAndDelete(req.params.id, function(err){
+        if(err){
+            console.log(err);
+            res.redirect("/books");
+        } else {
+            res.redirect("/books");
         }
     });
 });
